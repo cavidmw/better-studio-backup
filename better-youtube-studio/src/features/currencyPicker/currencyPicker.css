@@ -1,0 +1,252 @@
+/* =====================================================================
+   Better YouTube Studio – currencyPicker.css
+   YouTube Studio dark theme – Roboto font, birebir renkler & spacing
+   ===================================================================== */
+
+/* ---------- Container ---------- */
+#ks-picker {
+    font-family: "Roboto", "YouTube Sans", sans-serif;
+    width: 100%;
+    max-width: none;
+    box-sizing: border-box;
+    background: #212121;
+    border: 1px solid #3d3d3d;
+    border-radius: 4px;
+    overflow: hidden;
+    margin-top: 4px;
+}
+
+/* ---------- Toolbar ---------- */
+#ks-toolbar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 12px;
+    background: #212121;
+    border-bottom: 1px solid #3d3d3d;
+    box-sizing: border-box;
+}
+
+#ks-search {
+    flex: 1;
+    min-width: 0;
+    height: 36px;
+    background: #121212;
+    border: 1px solid #3d3d3d;
+    border-radius: 4px;
+    color: #e0e0e0;
+    font-family: "Roboto", "YouTube Sans", sans-serif;
+    font-size: 14px;
+    font-weight: 400;
+    padding: 0 12px;
+    outline: none;
+    transition: border-color 0.15s ease;
+    box-sizing: border-box;
+    letter-spacing: 0.01em;
+}
+
+#ks-search::placeholder {
+    color: #717171;
+}
+
+#ks-search:focus {
+    border-color: #065fd4;
+    background: #181818;
+}
+
+#ks-star-filter {
+    flex-shrink: 0;
+    width: 36px;
+    height: 36px;
+    background: #121212;
+    border: 1px solid #3d3d3d;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background 0.15s ease, border-color 0.15s ease;
+    padding: 0;
+}
+
+#ks-star-filter:hover {
+    background: #2a2a2a;
+    border-color: #717171;
+}
+
+#ks-star-filter.ks-active {
+    background: rgba(255, 214, 0, 0.1);
+    border-color: #ffd600;
+}
+
+#ks-star-filter svg {
+    width: 18px;
+    height: 18px;
+    fill: #717171;
+    transition: fill 0.15s ease;
+}
+
+#ks-star-filter:hover svg {
+    fill: #aaa;
+}
+
+#ks-star-filter.ks-active svg {
+    fill: #ffd600;
+}
+
+/* ---------- Currency List ---------- */
+#ks-list {
+    list-style: none;
+    margin: 0;
+    padding: 4px 0;
+    max-height: 460px;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: #3d3d3d transparent;
+}
+
+#ks-list::-webkit-scrollbar {
+    width: 6px;
+}
+
+#ks-list::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+#ks-list::-webkit-scrollbar-thumb {
+    background: #3d3d3d;
+    border-radius: 3px;
+}
+
+#ks-list::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+/* ---------- List Item ---------- */
+.ks-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 0 14px 0 12px;
+    height: 40px;
+    cursor: pointer;
+    transition: background 0.1s ease;
+    position: relative;
+    user-select: none;
+    box-sizing: border-box;
+}
+
+.ks-item:hover {
+    background: #2e2e2e;
+}
+
+.ks-item.ks-selected {
+    background: #0a2640;
+}
+
+.ks-item.ks-selected::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 4px;
+    bottom: 4px;
+    width: 3px;
+    background: #065fd4;
+    border-radius: 0 2px 2px 0;
+}
+
+/* Separator between favorites and the rest */
+.ks-separator {
+    height: 1px;
+    background: #3d3d3d;
+    margin: 4px 12px;
+    list-style: none;
+}
+
+/* ---------- Currency Code ---------- */
+.ks-code {
+    font-family: "Roboto Mono", "Courier New", monospace;
+    font-size: 13px;
+    font-weight: 500;
+    color: #e0e0e0;
+    min-width: 40px;
+    letter-spacing: 0.05em;
+    flex-shrink: 0;
+}
+
+.ks-item.ks-selected .ks-code {
+    color: #8ab4f8;
+}
+
+/* ---------- Currency Name ---------- */
+.ks-name {
+    font-size: 13px;
+    font-weight: 400;
+    color: #aaa;
+    flex: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    letter-spacing: 0.01em;
+}
+
+.ks-item.ks-selected .ks-name {
+    color: #c8d8f8;
+}
+
+/* ---------- Star Button in each row ---------- */
+.ks-item-star {
+    flex-shrink: 0;
+    width: 28px;
+    height: 28px;
+    background: none;
+    border: none;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    border-radius: 50%;
+    transition: background 0.15s ease;
+    margin-left: auto;
+    opacity: 0;
+}
+
+/* Show star on hover or when starred */
+.ks-item:hover .ks-item-star,
+.ks-item-star.ks-starred {
+    opacity: 1;
+}
+
+.ks-item-star:hover {
+    background: rgba(255, 214, 0, 0.12);
+}
+
+.ks-item-star svg {
+    width: 15px;
+    height: 15px;
+    fill: #555;
+    transition: fill 0.15s ease;
+}
+
+.ks-item-star:hover svg {
+    fill: #ffd600;
+}
+
+.ks-item-star.ks-starred svg {
+    fill: #ffd600;
+}
+
+/* ---------- Empty state ---------- */
+#ks-empty {
+    display: none;
+    padding: 28px 12px;
+    text-align: center;
+    font-size: 13px;
+    color: #717171;
+    font-family: "Roboto", "YouTube Sans", sans-serif;
+}
+
+#ks-empty.ks-visible {
+    display: block;
+}

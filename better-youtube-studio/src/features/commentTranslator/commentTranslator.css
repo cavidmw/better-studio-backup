@@ -1,0 +1,141 @@
+/**
+ * BYS Comment Translator — Stil Dosyası
+ * YouTube Studio karanlık tema uyumlu
+ */
+
+/* ── Çeviri Butonu ── */
+.bys-translate-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    margin-right: 8px;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 18px;
+    color: #e0e0e0;
+    font-size: 12px;
+    font-weight: 500;
+    font-family: 'Roboto', -apple-system, sans-serif;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+}
+
+.bys-translate-btn:hover {
+    background: rgba(255, 255, 255, 0.12);
+    border-color: rgba(255, 255, 255, 0.2);
+    color: #ffffff;
+}
+
+.bys-translate-btn:active {
+    transform: scale(0.97);
+}
+
+.bys-translate-btn:disabled {
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+
+.bys-translate-btn svg {
+    width: 14px;
+    height: 14px;
+    flex-shrink: 0;
+}
+
+/* ── Loading Durumu ── */
+.bys-translate-btn.bys-loading {
+    background: rgba(66, 133, 244, 0.15);
+    border-color: rgba(66, 133, 244, 0.3);
+    color: #8ab4f8;
+}
+
+.bys-spinner {
+    width: 12px;
+    height: 12px;
+    border: 2px solid rgba(138, 180, 248, 0.3);
+    border-top-color: #8ab4f8;
+    border-radius: 50%;
+    animation: bys-spin 0.8s linear infinite;
+}
+
+@keyframes bys-spin {
+    to { transform: rotate(360deg); }
+}
+
+/* ── Başarılı Durum ── */
+.bys-translate-btn.bys-done {
+    background: rgba(52, 168, 83, 0.15);
+    border-color: rgba(52, 168, 83, 0.3);
+    color: #81c995;
+}
+
+/* ── Hata Durumu ── */
+.bys-translate-btn.bys-error {
+    background: rgba(234, 67, 53, 0.15);
+    border-color: rgba(234, 67, 53, 0.3);
+    color: #f28b82;
+}
+
+/* ── Pulse Animasyonu (zaten çevrilmiş) ── */
+.bys-translate-btn.bys-pulse {
+    animation: bys-pulse 0.5s ease;
+}
+
+@keyframes bys-pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+}
+
+/* ── Çevrilmiş Yorum Kartı ── */
+ytcp-comment.bys-translated {
+    background: rgba(66, 133, 244, 0.05) !important;
+    border-left: 3px solid rgba(66, 133, 244, 0.4);
+    border-radius: 4px;
+}
+
+/* ── Çeviri Container ── */
+.bys-translation-container {
+    padding: 12px 0;
+    margin-top: 4px;
+}
+
+.bys-translation-label {
+    display: inline-block;
+    padding: 2px 8px;
+    margin-bottom: 8px;
+    background: rgba(66, 133, 244, 0.2);
+    border-radius: 4px;
+    color: #8ab4f8;
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.bys-translated-text {
+    color: #e8eaed;
+    font-size: 14px;
+    line-height: 1.5;
+    margin-bottom: 12px;
+    word-wrap: break-word;
+}
+
+/* ── Orijinal Metin (küçük, soluk) ── */
+.bys-original-text {
+    padding-top: 10px;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    font-size: 12px;
+    color: #9aa0a6;
+}
+
+.bys-original-label {
+    font-weight: 500;
+    margin-right: 6px;
+    color: #80868b;
+}
+
+.bys-original-content {
+    font-style: italic;
+    opacity: 0.8;
+}

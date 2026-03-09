@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Better YouTube Studio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+
+  <!-- ─── Hero ──────────────────────────────────────────────────────── -->
+  <header class="hero">
+    <div class="hero-logo">
+      <img src="../icons/icon128.png" width="44" height="44" alt="Better YouTube Studio">
+    </div>
+    <div class="hero-text">
+      <h1 class="hero-title">Better YouTube Studio</h1>
+      <p class="hero-desc">YouTube Studio deneyimini güçlendiren profesyonel araç seti.</p>
+    </div>
+    <div class="hero-badge" id="status-dot" title="Aktif"></div>
+  </header>
+
+  <!-- ─── Bölüm başlığı ─────────────────────────────────────────────── -->
+  <div class="section-label">Özellikler</div>
+
+  <!-- ─── Kart Listesi ──────────────────────────────────────────────── -->
+  <main class="cards">
+
+    <!-- Kart 1: Grafik Renkleri -->
+    <div class="card card--action" id="card-colors" role="button" tabindex="0" aria-label="Grafik Renklerini Özelleştir">
+      <div class="card-icon" style="--icon-hue: #ff0000;">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+          <circle cx="12" cy="12" r="4" fill="currentColor"/>
+          <path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.93 4.93l2.12 2.12M16.95 16.95l2.12 2.12M4.93 19.07l2.12-2.12M16.95 7.05l2.12-2.12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <div class="card-body">
+        <span class="card-title">Grafik Renkleri</span>
+        <span class="card-desc">Analytics grafiklerini kişisel renginizle özelleştirin.</span>
+      </div>
+      <div class="card-arrow">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+          <path d="M9 18l6-6-6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+    </div>
+
+    <!-- Kart 2: Kısayollar (inline panel ile) -->
+    <div class="card card--expandable" id="card-shortcuts" role="button" tabindex="0" aria-expanded="false" aria-label="Klavye Kısayolları">
+      <div class="card-icon" style="--icon-hue: #3ea6ff;">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+          <rect x="2" y="6" width="20" height="13" rx="2" stroke="currentColor" stroke-width="2"/>
+          <path d="M6 10h.01M10 10h.01M14 10h.01M18 10h.01M8 14h8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <div class="card-body">
+        <span class="card-title">Klavye Kısayolları</span>
+        <span class="card-desc">Alt + 1–9 ile sayfalar arası anında geçiş.</span>
+      </div>
+      <div class="card-arrow card-chevron">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+          <path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+    </div>
+
+    <!-- Shortcuts Inline Panel -->
+    <div class="shortcuts-panel" id="shortcuts-panel" aria-hidden="true">
+      <div class="shortcuts-inner">
+        <div class="shortcuts-list" id="shortcuts-list"></div>
+        <div class="shortcuts-footer">
+          <div class="shortcuts-hint">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/><path d="M12 8v4M12 16h.01" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+            Değişiklikler anında kaydedilir.
+          </div>
+          <button class="btn-reset-shortcuts" id="reset-shortcuts-btn">↺ Varsayıla Dön</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Kart 3: Para Birimi -->
+    <div class="card card--toggleable" id="card-currency">
+      <div class="card-icon" style="--icon-hue: #f59e0b;">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+          <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
+          <path d="M12 6v2m0 8v2M9.5 9.5A2.5 2.5 0 0 1 12 8a2.5 2.5 0 0 1 0 5 2.5 2.5 0 0 0 0 5 2.5 2.5 0 0 0 2.5-1.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <div class="card-body">
+        <span class="card-title">Para Birimi Seçici</span>
+        <span class="card-desc">Ayarlar &rsaquo; Genel ekranında gelişmiş seçici otomatik aktif.</span>
+      </div>
+      <div class="card-status">
+        <label class="toggle-switch" title="Para Birimi Seçici'yi aç/kapat">
+          <input type="checkbox" id="toggle-currency" checked>
+          <span class="toggle-track"></span>
+        </label>
+      </div>
+    </div>
+
+    <!-- Kart 4: USD → AZN Tooltip -->
+    <div class="card card--toggleable" id="card-tooltip">
+      <div class="card-icon" style="--icon-hue: #2ecc71;">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+          <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <div class="card-body">
+        <span class="card-title">USD → AZN Tooltip</span>
+        <span class="card-desc">Dolar tutarlarının üzerine gelince AZN karşılığı gösterilir.</span>
+      </div>
+      <div class="card-status">
+        <label class="toggle-switch" title="USD→AZN Tooltip'i aç/kapat">
+          <input type="checkbox" id="toggle-tooltip" checked>
+          <span class="toggle-track"></span>
+        </label>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- ─── Footer ────────────────────────────────────────────────────── -->
+  <footer class="popup-footer">
+    <span class="footer-version">v1.0.0</span>
+    <span class="footer-dot">·</span>
+    <span class="footer-brand">Better YouTube Studio</span>
+  </footer>
+
+  <!-- ─── Toast ─────────────────────────────────────────────────────── -->
+  <div id="popup-toast" class="popup-toast"></div>
+
+  <script src="popup.js"></script>
+</body>
+</html>

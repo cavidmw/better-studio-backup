@@ -1,0 +1,190 @@
+/**
+ * BYS Logout Guard — Modal Stilleri
+ * Premium koyu tema + shake/glow animasyonları
+ */
+
+/* ── Overlay ── */
+#bys-logout-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 999999;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.25s ease, visibility 0.25s ease;
+    backdrop-filter: blur(2px);
+    -webkit-backdrop-filter: blur(2px);
+}
+
+#bys-logout-overlay.bys-visible {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* ── Modal ── */
+#bys-logout-modal {
+    background: rgba(28, 28, 28, 0.95);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 20px;
+    padding: 32px 36px 28px;
+    max-width: 380px;
+    width: 90%;
+    text-align: center;
+    box-shadow: 
+        0 24px 48px rgba(0, 0, 0, 0.5),
+        0 0 0 1px rgba(255, 255, 255, 0.03) inset;
+    transform: scale(0.95) translateY(10px);
+    transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1),
+                box-shadow 0.3s ease;
+}
+
+#bys-logout-overlay.bys-visible #bys-logout-modal {
+    transform: scale(1) translateY(0);
+}
+
+/* ── Uyarı İkonu ── */
+.bys-logout-icon {
+    width: 48px;
+    height: 48px;
+    margin: 0 auto 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(204, 0, 0, 0.15);
+    border-radius: 50%;
+}
+
+.bys-logout-icon svg {
+    width: 28px;
+    height: 28px;
+    color: #e53935;
+}
+
+/* ── Başlık ── */
+.bys-logout-title {
+    color: #ffffff;
+    font-size: 18px;
+    font-weight: 600;
+    margin: 0 0 10px 0;
+    font-family: 'YouTube Sans', 'Roboto', -apple-system, sans-serif;
+    letter-spacing: -0.2px;
+}
+
+/* ── Açıklama ── */
+.bys-logout-desc {
+    color: #9e9e9e;
+    font-size: 14px;
+    line-height: 1.5;
+    margin: 0 0 24px 0;
+    font-family: 'Roboto', -apple-system, sans-serif;
+}
+
+/* ── Butonlar ── */
+.bys-logout-actions {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+}
+
+.bys-logout-btn {
+    flex: 1;
+    padding: 12px 24px;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-family: 'Roboto', -apple-system, sans-serif;
+    border: none;
+    outline: none;
+}
+
+/* İptal butonu — güvenli, sakin */
+#bys-logout-cancel {
+    background: rgba(255, 255, 255, 0.08);
+    color: #ffffff;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+#bys-logout-cancel:hover {
+    background: rgba(255, 255, 255, 0.12);
+    border-color: rgba(255, 255, 255, 0.15);
+}
+
+#bys-logout-cancel:active {
+    transform: scale(0.97);
+}
+
+/* Devam et butonu — kırmızı aksen */
+#bys-logout-confirm {
+    background: #e53935;
+    color: #ffffff;
+    border: none;
+    box-shadow: 0 2px 8px rgba(229, 57, 53, 0.3);
+}
+
+#bys-logout-confirm:hover {
+    background: #ef5350;
+    box-shadow: 0 4px 12px rgba(229, 57, 53, 0.4);
+}
+
+#bys-logout-confirm:active {
+    transform: scale(0.97);
+}
+
+/* ── Easter Egg Animasyonları ── */
+
+/* Buton titreşim */
+@keyframes bys-shake {
+    0%, 100% { transform: translateX(0); }
+    15% { transform: translateX(-4px) rotate(-1deg); }
+    30% { transform: translateX(4px) rotate(1deg); }
+    45% { transform: translateX(-3px) rotate(-0.5deg); }
+    60% { transform: translateX(3px) rotate(0.5deg); }
+    75% { transform: translateX(-2px); }
+    90% { transform: translateX(2px); }
+}
+
+#bys-logout-confirm.bys-shaking {
+    animation: bys-shake 0.5s ease;
+}
+
+/* Modal kırmızı glow */
+@keyframes bys-glow-pulse {
+    0%, 100% { 
+        box-shadow: 
+            0 24px 48px rgba(0, 0, 0, 0.5),
+            0 0 0 1px rgba(255, 255, 255, 0.03) inset,
+            0 0 0 rgba(229, 57, 53, 0);
+    }
+    50% { 
+        box-shadow: 
+            0 24px 48px rgba(0, 0, 0, 0.5),
+            0 0 0 1px rgba(229, 57, 53, 0.2) inset,
+            0 0 25px rgba(229, 57, 53, 0.2);
+    }
+}
+
+#bys-logout-modal.bys-hover-warn {
+    animation: bys-glow-pulse 0.7s ease;
+    border-color: rgba(229, 57, 53, 0.3);
+}
+
+/* ── Responsive ── */
+@media (max-width: 480px) {
+    #bys-logout-modal {
+        padding: 24px 20px;
+        max-width: 95%;
+    }
+    
+    .bys-logout-actions {
+        flex-direction: column;
+    }
+    
+    .bys-logout-btn {
+        width: 100%;
+    }
+}
