@@ -1,4 +1,4 @@
-export default async function handler(req, res) {
+module.exports = async function handler(req, res) {
     // CORS headers
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
@@ -19,13 +19,11 @@ export default async function handler(req, res) {
             return res.status(400).json({ error: 'Text is required' });
         }
 
-        // Google Translate ücretsiz API (unofficial)
         const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=${targetLang}&dt=t&q=${encodeURIComponent(text)}`;
         
         const response = await fetch(url);
         const data = await response.json();
         
-        // Çeviri sonucunu parse et
         let translatedText = '';
         if (data && data[0]) {
             for (const part of data[0]) {
@@ -45,4 +43,4 @@ export default async function handler(req, res) {
         console.error('Translation error:', error);
         return res.status(500).json({ error: 'Translation failed' });
     }
-}
+};
