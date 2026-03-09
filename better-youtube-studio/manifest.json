@@ -40,14 +40,12 @@
                 "src/features/currencyPicker/currencies.js",
                 "src/features/currencyPicker/currencyPicker.js",
                 "src/features/logoutGuard/logoutGuard.js",
-                "src/features/commentTranslator/commentTranslator.js",
                 "src/content/main.js"
             ],
             "css": [
                 "src/features/graphColors/graphColors.css",
                 "src/features/currencyPicker/currencyPicker.css",
-                "src/features/logoutGuard/logoutGuard.css",
-                "src/features/commentTranslator/commentTranslator.css"
+                "src/features/logoutGuard/logoutGuard.css"
             ],
             "run_at": "document_idle"
         },
