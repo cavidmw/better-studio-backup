@@ -31,7 +31,8 @@ window.BYS.Storage = (function () {
       shortcuts: true,
       currencyPicker: true,
       tooltip: true,
-      logoutGuard: true
+      logoutGuard: true,
+      collections: true
     }
   };
 

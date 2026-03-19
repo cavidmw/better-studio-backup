@@ -141,8 +141,15 @@
 
     // ─── Popup'tan Mesaj Dinleme ─────────────────────────────────────────────────
 
-    chrome.runtime.onMessage.addListener((message) => {
+    chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
         if (!message || !message.type) return;
+
+        if (message.type === 'BYS_GET_THEME') {
+            const isDark = document.documentElement.hasAttribute('dark');
+            sendResponse({ isDark });
+            return true;
+        }
+
         switch (message.type) {
             case 'BYS_REFRESH_COLORS':
                 if (window.BYS?.GraphColors?.refresh) BYS.GraphColors.refresh().catch(() => { });

@@ -1,17 +1,154 @@
 /* ═══════════════════════════════════════════════════════════════════
-   BYS — Analytics Grafik & UI Stilleri
+   BYS — Analytics Graph & UI Styles
+   Adaptive Light / Dark theme via CSS Custom Properties
    ═══════════════════════════════════════════════════════════════════ */
 
-/* ─── Header Özelleştir Butonu ────────────────────────────────────── */
+/* ─── CSS Variables (Dark = default) ─── */
+:root {
+  --bys-gc-surface:        rgba(255, 255, 255, 0.05);
+  --bys-gc-surface-hover:  rgba(255, 255, 255, 0.10);
+  --bys-gc-surface-active: rgba(255, 255, 255, 0.07);
+  --bys-gc-border:         rgba(255, 255, 255, 0.10);
+  --bys-gc-border-hover:   rgba(255, 255, 255, 0.20);
+  --bys-gc-text:           #e0e0e0;
+  --bys-gc-text-hover:     #ffffff;
+  --bys-gc-icon-bg:        rgba(255, 0, 0, 0.15);
+  --bys-gc-icon-bg-hover:  rgba(255, 0, 0, 0.22);
+  --bys-gc-icon-color:     #ff4444;
+
+  /* Modal */
+  --bys-gc-overlay:        rgba(0, 0, 0, 0.65);
+  --bys-gc-modal-bg:       #1e1e1e;
+  --bys-gc-modal-border:   #333;
+  --bys-gc-modal-shadow:   0 20px 60px rgba(0, 0, 0, 0.8);
+  --bys-gc-header-bg:      #191919;
+  --bys-gc-header-border:  #2a2a2a;
+  --bys-gc-title-color:    #f0f0f0;
+  --bys-gc-close-color:    #707070;
+  --bys-gc-close-hover-bg: #333;
+  --bys-gc-close-hover:    #e8e8e8;
+
+  /* Body / Sections */
+  --bys-gc-label:          #888;
+  --bys-gc-row-bg:         #252525;
+  --bys-gc-row-border:     #333;
+  --bys-gc-hex-bg:         #1a1a1a;
+  --bys-gc-hex-border:     #3a3a3a;
+  --bys-gc-hex-color:      #e8e8e8;
+  --bys-gc-hint:           #666;
+  --bys-gc-preview-border: rgba(255, 255, 255, 0.1);
+
+  /* Favorites */
+  --bys-gc-addfav-bg:      #2a2a2a;
+  --bys-gc-addfav-border:  #3a3a3a;
+  --bys-gc-addfav-text:    #aaa;
+  --bys-gc-addfav-hover-bg:#333;
+  --bys-gc-addfav-hover:   #e8e8e8;
+  --bys-gc-fav-empty:      #555;
+  --bys-gc-fav-code:       #bbb;
+  --bys-gc-fav-use-border: #3a3a3a;
+  --bys-gc-fav-use-text:   #999;
+  --bys-gc-fav-del:        #555;
+
+  /* Footer */
+  --bys-gc-footer-bg:      #191919;
+  --bys-gc-footer-border:  #2a2a2a;
+  --bys-gc-reset-border:   #3a3a3a;
+  --bys-gc-reset-text:     #888;
+  --bys-gc-reset-hover-bg: #2a2a2a;
+  --bys-gc-cancel-bg:      #2a2a2a;
+  --bys-gc-cancel-border:  #3a3a3a;
+  --bys-gc-cancel-text:    #aaa;
+  --bys-gc-cancel-hover-bg:#333;
+
+  /* Toast */
+  --bys-gc-toast-bg:       #272727;
+  --bys-gc-toast-border:   #3d3d3d;
+  --bys-gc-toast-text:     #e8e8e8;
+  --bys-gc-toast-shadow:   0 4px 16px rgba(0, 0, 0, 0.5);
+
+  /* Scrollbar */
+  --bys-gc-scrollbar:      #333;
+}
+
+/* ─── Light theme overrides ─── */
+html:not([dark]) {
+  --bys-gc-surface:        rgba(0, 0, 0, 0.04);
+  --bys-gc-surface-hover:  rgba(0, 0, 0, 0.07);
+  --bys-gc-surface-active: rgba(0, 0, 0, 0.05);
+  --bys-gc-border:         rgba(0, 0, 0, 0.10);
+  --bys-gc-border-hover:   rgba(0, 0, 0, 0.18);
+  --bys-gc-text:           #444;
+  --bys-gc-text-hover:     #0f0f0f;
+  --bys-gc-icon-bg:        rgba(255, 0, 0, 0.08);
+  --bys-gc-icon-bg-hover:  rgba(255, 0, 0, 0.14);
+  --bys-gc-icon-color:     #cc0000;
+
+  /* Modal */
+  --bys-gc-overlay:        rgba(0, 0, 0, 0.40);
+  --bys-gc-modal-bg:       #ffffff;
+  --bys-gc-modal-border:   #ddd;
+  --bys-gc-modal-shadow:   0 20px 60px rgba(0, 0, 0, 0.18);
+  --bys-gc-header-bg:      #fafafa;
+  --bys-gc-header-border:  #e5e5e5;
+  --bys-gc-title-color:    #0f0f0f;
+  --bys-gc-close-color:    #909090;
+  --bys-gc-close-hover-bg: #e5e5e5;
+  --bys-gc-close-hover:    #0f0f0f;
+
+  /* Body / Sections */
+  --bys-gc-label:          #606060;
+  --bys-gc-row-bg:         #f5f5f5;
+  --bys-gc-row-border:     #e0e0e0;
+  --bys-gc-hex-bg:         #ffffff;
+  --bys-gc-hex-border:     #d0d0d0;
+  --bys-gc-hex-color:      #0f0f0f;
+  --bys-gc-hint:           #909090;
+  --bys-gc-preview-border: rgba(0, 0, 0, 0.1);
+
+  /* Favorites */
+  --bys-gc-addfav-bg:      #f0f0f0;
+  --bys-gc-addfav-border:  #ddd;
+  --bys-gc-addfav-text:    #606060;
+  --bys-gc-addfav-hover-bg:#e5e5e5;
+  --bys-gc-addfav-hover:   #0f0f0f;
+  --bys-gc-fav-empty:      #999;
+  --bys-gc-fav-code:       #444;
+  --bys-gc-fav-use-border: #ddd;
+  --bys-gc-fav-use-text:   #606060;
+  --bys-gc-fav-del:        #999;
+
+  /* Footer */
+  --bys-gc-footer-bg:      #fafafa;
+  --bys-gc-footer-border:  #e5e5e5;
+  --bys-gc-reset-border:   #ddd;
+  --bys-gc-reset-text:     #606060;
+  --bys-gc-reset-hover-bg: #e8e8e8;
+  --bys-gc-cancel-bg:      #f0f0f0;
+  --bys-gc-cancel-border:  #ddd;
+  --bys-gc-cancel-text:    #444;
+  --bys-gc-cancel-hover-bg:#e5e5e5;
+
+  /* Toast */
+  --bys-gc-toast-bg:       #ffffff;
+  --bys-gc-toast-border:   #e0e0e0;
+  --bys-gc-toast-text:     #0f0f0f;
+  --bys-gc-toast-shadow:   0 4px 16px rgba(0, 0, 0, 0.12);
+
+  /* Scrollbar */
+  --bys-gc-scrollbar:      #ccc;
+}
+
+/* ─── Header Customize Button ────────────────────────────────────── */
 #bys-header-btn {
   display: inline-flex;
   align-items: center;
   gap: 7px;
   padding: 5px 12px 5px 6px;
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: var(--bys-gc-surface);
+  border: 1px solid var(--bys-gc-border);
   border-radius: 20px;
-  color: #e0e0e0;
+  color: var(--bys-gc-text);
   font-family: 'Roboto', 'YouTube Sans', sans-serif;
   font-size: 13px;
   font-weight: 500;
@@ -26,16 +163,16 @@
 }
 
 #bys-header-btn:hover {
-  background: rgba(255, 255, 255, 0.1);
-  border-color: rgba(255, 255, 255, 0.2);
-  color: #ffffff;
+  background: var(--bys-gc-surface-hover);
+  border-color: var(--bys-gc-border-hover);
+  color: var(--bys-gc-text-hover);
 }
 
 #bys-header-btn:active {
-  background: rgba(255, 255, 255, 0.07);
+  background: var(--bys-gc-surface-active);
 }
 
-/* İkon kapsayıcı — kırmızı aksan burada */
+/* Icon container — red accent */
 .bys-btn-icon {
   display: inline-flex;
   align-items: center;
@@ -43,21 +180,21 @@
   width: 24px;
   height: 24px;
   border-radius: 50%;
-  background: rgba(255, 0, 0, 0.15);
-  color: #ff4444;
+  background: var(--bys-gc-icon-bg);
+  color: var(--bys-gc-icon-color);
   flex-shrink: 0;
   transition: background 0.15s ease;
 }
 
 #bys-header-btn:hover .bys-btn-icon {
-  background: rgba(255, 0, 0, 0.22);
+  background: var(--bys-gc-icon-bg-hover);
 }
 
 /* ─── Modal Overlay ───────────────────────────────────────────────── */
 #bys-modal-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.65);
+  background: var(--bys-gc-overlay);
   z-index: 99999;
   display: flex;
   align-items: center;
@@ -71,15 +208,15 @@
   to   { opacity: 1; }
 }
 
-/* ─── Modal Kutu ──────────────────────────────────────────────────── */
+/* ─── Modal Box ──────────────────────────────────────────────────── */
 .bys-modal {
-  background: #1e1e1e;
-  border: 1px solid #333;
+  background: var(--bys-gc-modal-bg);
+  border: 1px solid var(--bys-gc-modal-border);
   border-radius: 16px;
   width: 380px;
   max-width: 95vw;
   font-family: 'Roboto', 'YouTube Sans', sans-serif;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
+  box-shadow: var(--bys-gc-modal-shadow);
   overflow: hidden;
   animation: bys-modal-in 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
@@ -95,8 +232,8 @@
   align-items: center;
   justify-content: space-between;
   padding: 18px 20px 14px;
-  border-bottom: 1px solid #2a2a2a;
-  background: #191919;
+  border-bottom: 1px solid var(--bys-gc-header-border);
+  background: var(--bys-gc-header-bg);
 }
 
 .bys-modal-title {
@@ -105,13 +242,13 @@
   gap: 10px;
   font-size: 15px;
   font-weight: 600;
-  color: #f0f0f0;
+  color: var(--bys-gc-title-color);
 }
 
 .bys-modal-close {
   background: none;
   border: none;
-  color: #707070;
+  color: var(--bys-gc-close-color);
   cursor: pointer;
   font-size: 17px;
   padding: 4px 8px;
@@ -121,8 +258,8 @@
 }
 
 .bys-modal-close:hover {
-  color: #e8e8e8;
-  background: #333;
+  color: var(--bys-gc-close-hover);
+  background: var(--bys-gc-close-hover-bg);
 }
 
 /* ─── Modal Body ──────────────────────────────────────────────────── */
@@ -141,19 +278,19 @@
 
 .bys-modal-label {
   font-size: 12px;
-  color: #888;
+  color: var(--bys-gc-label);
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.6px;
 }
 
-/* ─── Renk Satırı ─────────────────────────────────────────────────── */
+/* ─── Color Row ─────────────────────────────────────────────────── */
 .bys-modal-color-row {
   display: flex;
   align-items: center;
   gap: 10px;
-  background: #252525;
-  border: 1px solid #333;
+  background: var(--bys-gc-row-bg);
+  border: 1px solid var(--bys-gc-row-border);
   border-radius: 10px;
   padding: 10px 14px;
 }
@@ -166,7 +303,7 @@
   cursor: pointer;
   padding: 2px;
   background: none;
-  outline: 2px solid #444;
+  outline: 2px solid var(--bys-gc-row-border);
   flex-shrink: 0;
 }
 
@@ -175,10 +312,10 @@
 
 .bys-m-hex {
   flex: 1;
-  background: #1a1a1a;
-  border: 1px solid #3a3a3a;
+  background: var(--bys-gc-hex-bg);
+  border: 1px solid var(--bys-gc-hex-border);
   border-radius: 8px;
-  color: #e8e8e8;
+  color: var(--bys-gc-hex-color);
   font-size: 14px;
   font-family: 'Roboto Mono', monospace;
   padding: 8px 12px;
@@ -193,7 +330,7 @@
   width: 36px;
   height: 36px;
   border-radius: 10px;
-  border: 2px solid rgba(255, 255, 255, 0.1);
+  border: 2px solid var(--bys-gc-preview-border);
   flex-shrink: 0;
   transition: background 0.2s;
 }
@@ -201,11 +338,11 @@
 .bys-modal-hint {
   margin: 0;
   font-size: 11.5px;
-  color: #666;
+  color: var(--bys-gc-hint);
   line-height: 1.5;
 }
 
-/* ─── Hızlı Preset Renkler ────────────────────────────────────────── */
+/* ─── Quick Preset Colors ────────────────────────────────────────── */
 .bys-modal-presets {
   display: flex;
   gap: 8px;
@@ -216,7 +353,7 @@
   width: 32px;
   height: 32px;
   border-radius: 50%;
-  border: 2px solid rgba(255, 255, 255, 0.1);
+  border: 2px solid var(--bys-gc-preview-border);
   cursor: pointer;
   transition: transform 0.12s, border-color 0.12s, box-shadow 0.12s;
 }
@@ -227,7 +364,7 @@
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
 }
 
-/* ─── Favoriler ───────────────────────────────────────────────────── */
+/* ─── Favorites ───────────────────────────────────────────────────── */
 .bys-modal-fav-header {
   display: flex;
   align-items: center;
@@ -235,17 +372,17 @@
 }
 
 .bys-m-add-fav {
-  background: #2a2a2a;
-  border: 1px solid #3a3a3a;
+  background: var(--bys-gc-addfav-bg);
+  border: 1px solid var(--bys-gc-addfav-border);
   border-radius: 20px;
-  color: #aaa;
+  color: var(--bys-gc-addfav-text);
   font-size: 11px;
   padding: 3px 10px;
   cursor: pointer;
   transition: background 0.12s, color 0.12s;
 }
 
-.bys-m-add-fav:hover { background: #333; color: #e8e8e8; }
+.bys-m-add-fav:hover { background: var(--bys-gc-addfav-hover-bg); color: var(--bys-gc-addfav-hover); }
 
 .bys-m-fav-list {
   display: flex;
@@ -254,12 +391,12 @@
   max-height: 130px;
   overflow-y: auto;
   scrollbar-width: thin;
-  scrollbar-color: #333 transparent;
+  scrollbar-color: var(--bys-gc-scrollbar) transparent;
 }
 
 .bys-m-fav-empty {
   font-size: 12px;
-  color: #555;
+  color: var(--bys-gc-fav-empty);
   font-style: italic;
 }
 
@@ -268,7 +405,7 @@
   align-items: center;
   gap: 10px;
   padding: 7px 10px;
-  background: #252525;
+  background: var(--bys-gc-row-bg);
   border-radius: 8px;
 }
 
@@ -276,7 +413,7 @@
   width: 22px;
   height: 22px;
   border-radius: 50%;
-  border: 2px solid rgba(255, 255, 255, 0.1);
+  border: 2px solid var(--bys-gc-preview-border);
   flex-shrink: 0;
 }
 
@@ -284,27 +421,27 @@
   flex: 1;
   font-size: 12px;
   font-family: monospace;
-  color: #bbb;
+  color: var(--bys-gc-fav-code);
   letter-spacing: 0.5px;
 }
 
 .bys-m-fav-use {
   background: transparent;
-  border: 1px solid #3a3a3a;
+  border: 1px solid var(--bys-gc-fav-use-border);
   border-radius: 6px;
-  color: #999;
+  color: var(--bys-gc-fav-use-text);
   font-size: 11px;
   padding: 3px 8px;
   cursor: pointer;
   transition: all 0.12s;
 }
 
-.bys-m-fav-use:hover { background: #333; color: #e8e8e8; }
+.bys-m-fav-use:hover { background: var(--bys-gc-close-hover-bg); color: var(--bys-gc-close-hover); }
 
 .bys-m-fav-del {
   background: none;
   border: none;
-  color: #555;
+  color: var(--bys-gc-fav-del);
   cursor: pointer;
   font-size: 13px;
   padding: 2px 4px;
@@ -321,8 +458,8 @@
   justify-content: space-between;
   gap: 10px;
   padding: 16px 20px;
-  border-top: 1px solid #2a2a2a;
-  background: #191919;
+  border-top: 1px solid var(--bys-gc-footer-border);
+  background: var(--bys-gc-footer-bg);
 }
 
 .bys-modal-footer-right {
@@ -333,18 +470,18 @@
 .bys-m-btn-reset {
   padding: 10px 14px;
   background: transparent;
-  border: 1px solid #3a3a3a;
+  border: 1px solid var(--bys-gc-reset-border);
   border-radius: 10px;
-  color: #888;
+  color: var(--bys-gc-reset-text);
   font-size: 12px;
   cursor: pointer;
   transition: background 0.15s, color 0.15s, border-color 0.15s;
 }
 
 .bys-m-btn-reset:hover {
-  background: #2a2a2a;
-  color: #e8e8e8;
-  border-color: #555;
+  background: var(--bys-gc-reset-hover-bg);
+  color: var(--bys-gc-close-hover);
+  border-color: var(--bys-gc-modal-border);
 }
 
 .bys-m-btn-apply {
@@ -363,16 +500,16 @@
 
 .bys-m-btn-cancel {
   padding: 10px 16px;
-  background: #2a2a2a;
-  border: 1px solid #3a3a3a;
+  background: var(--bys-gc-cancel-bg);
+  border: 1px solid var(--bys-gc-cancel-border);
   border-radius: 10px;
-  color: #aaa;
+  color: var(--bys-gc-cancel-text);
   font-size: 13px;
   cursor: pointer;
   transition: background 0.15s;
 }
 
-.bys-m-btn-cancel:hover { background: #333; color: #e8e8e8; }
+.bys-m-btn-cancel:hover { background: var(--bys-gc-cancel-hover-bg); color: var(--bys-gc-close-hover); }
 
 /* ─── Global Toast ────────────────────────────────────────────────── */
 #bys-toast {
@@ -380,9 +517,9 @@
   top: 72px;
   left: 50%;
   transform: translateX(-50%) translateY(-20px);
-  background: #272727;
-  border: 1px solid #3d3d3d;
-  color: #e8e8e8;
+  background: var(--bys-gc-toast-bg);
+  border: 1px solid var(--bys-gc-toast-border);
+  color: var(--bys-gc-toast-text);
   padding: 10px 22px;
   border-radius: 24px;
   font-family: 'Roboto', 'YouTube Sans', sans-serif;
@@ -390,7 +527,7 @@
   z-index: 999999;
   opacity: 0;
   pointer-events: none;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
+  box-shadow: var(--bys-gc-toast-shadow);
   transition: opacity 0.22s, transform 0.22s;
   white-space: nowrap;
 }

@@ -22,6 +22,8 @@
             'feature.tooltip.desc': 'Dolar tutarlarının üzerine gelince AZN karşılığı gösterilir.',
             'feature.logoutGuard': 'Çıkış Koruması',
             'feature.logoutGuard.desc': 'Yanlışlıkla çıkış yapmayı önleyen onay modalı.',
+            'feature.collections': 'Koleksiyonlar',
+            'feature.collections.desc': 'YouTube kanallarını klasörlerde organize edin.',
             'shortcuts.hint': 'Değişiklikler anında kaydedilir.',
             'shortcuts.reset': '↺ Varsayılana Dön',
             'shortcuts.unassigned': '— Atanmamış —',
@@ -47,44 +49,46 @@
             'toast.openAnalytics': '⚠️  Önce Analytics sayfasını açın',
             'toast.modalOpening': '🎨  Özelleştirme modalı açılıyor…'
         },
-        az: {
+        en: {
             'popup.title': 'Better YouTube Studio',
-            'popup.desc': 'YouTube Studio təcrübənizi gücləndirən peşəkar alət dəsti.',
-            'popup.features': 'Xüsusiyyətlər',
-            'feature.graphColors': 'Qrafik Rəngləri',
-            'feature.graphColors.desc': 'Analytics qrafiklərini şəxsi rənginizlə fərdiləşdirin.',
-            'feature.shortcuts': 'Klaviatura Qısayolları',
-            'feature.shortcuts.desc': 'Alt + 1–9 ilə səhifələr arasında ani keçid.',
-            'feature.currencyPicker': 'Valyuta Seçici',
-            'feature.currencyPicker.desc': 'Ayarlar › Ümumi ekranında təkmil seçici avtomatik aktiv.',
+            'popup.desc': 'A professional toolset that enhances the YouTube Studio experience.',
+            'popup.features': 'Features',
+            'feature.graphColors': 'Graph Colors',
+            'feature.graphColors.desc': 'Customize Analytics graphs with your personal colors.',
+            'feature.shortcuts': 'Keyboard Shortcuts',
+            'feature.shortcuts.desc': 'Instant navigation between pages with Alt + 1–9.',
+            'feature.currencyPicker': 'Currency Picker',
+            'feature.currencyPicker.desc': 'Advanced picker automatically active in Settings › General.',
             'feature.tooltip': 'USD → AZN Tooltip',
-            'feature.tooltip.desc': 'Dollar məbləğlərinin üzərinə gələndə AZN qarşılığı göstərilir.',
-            'feature.logoutGuard': 'Çıxış Qoruması',
-            'feature.logoutGuard.desc': 'Təsadüfi çıxışın qarşısını alan təsdiq modalı.',
-            'shortcuts.hint': 'Dəyişikliklər dərhal yadda saxlanılır.',
-            'shortcuts.reset': '↺ Standarta Qayıt',
-            'shortcuts.unassigned': '— Təyin edilməyib —',
-            'shortcuts.inUse': '(istifadə olunur)',
-            'shortcuts.removed': '← silindi',
-            'shortcuts.loaded': '↺ Standart qısayollar yükləndi',
-            'nav.mainMenu': '── Əsas Menyu ──',
+            'feature.tooltip.desc': 'Shows AZN equivalent when hovering over Dollar amounts.',
+            'feature.logoutGuard': 'Logout Guard',
+            'feature.logoutGuard.desc': 'Confirmation modal to prevent accidental logouts.',
+            'feature.collections': 'Collections',
+            'feature.collections.desc': 'Organize your YouTube channels into folders.',
+            'shortcuts.hint': 'Changes are saved instantly.',
+            'shortcuts.reset': '↺ Reset to Default',
+            'shortcuts.unassigned': '— Unassigned —',
+            'shortcuts.inUse': '(in use)',
+            'shortcuts.removed': '← removed',
+            'shortcuts.loaded': '↺ Default shortcuts loaded',
+            'nav.mainMenu': '── Main Menu ──',
             'nav.analytics': '── Analytics ──',
-            'nav.dashboard': 'İdarəetmə Paneli',
-            'nav.contentVideos': 'Məzmun - Videolar',
-            'nav.contentShorts': 'Məzmun - Shorts',
-            'nav.comments': 'İcma',
-            'nav.monetization': 'Pul Qazanma',
-            'nav.customization': 'Fərdiləşdirmə',
-            'nav.audioLibrary': 'Səs Kitabxanası',
-            'nav.subtitles': 'Altyazı və Səs',
-            'nav.copyright': 'Məzmun Aşkarlanması',
-            'nav.settings': 'Ayarlar',
-            'nav.analyticsOverview': 'Analytics - Ümumi Baxış',
-            'nav.analyticsContent': 'Analytics - Məzmun',
-            'nav.analyticsAudience': 'Analytics - Auditoriya',
-            'nav.analyticsRevenue': 'Analytics - Gəlir',
-            'toast.openAnalytics': '⚠️  Əvvəlcə Analytics səhifəsini açın',
-            'toast.modalOpening': '🎨  Fərdiləşdirmə modalı açılır…'
+            'nav.dashboard': 'Dashboard',
+            'nav.contentVideos': 'Content - Videos',
+            'nav.contentShorts': 'Content - Shorts',
+            'nav.comments': 'Community',
+            'nav.monetization': 'Earn',
+            'nav.customization': 'Customization',
+            'nav.audioLibrary': 'Audio Library',
+            'nav.subtitles': 'Subtitles',
+            'nav.copyright': 'Copyright',
+            'nav.settings': 'Settings',
+            'nav.analyticsOverview': 'Analytics - Overview',
+            'nav.analyticsContent': 'Analytics - Content',
+            'nav.analyticsAudience': 'Analytics - Audience',
+            'nav.analyticsRevenue': 'Analytics - Revenue',
+            'toast.openAnalytics': '⚠️ Please open the Analytics page first',
+            'toast.modalOpening': '🎨 Opening customization modal…'
         }
     };
 
@@ -393,7 +397,8 @@
         { id: 'toggle-shortcuts',      feature: 'shortcuts',      cardId: 'card-shortcuts' },
         { id: 'toggle-currencyPicker', feature: 'currencyPicker', cardId: 'card-currency' },
         { id: 'toggle-tooltip',        feature: 'tooltip',        cardId: 'card-tooltip' },
-        { id: 'toggle-logoutGuard',    feature: 'logoutGuard',    cardId: 'card-logoutGuard' }
+        { id: 'toggle-logoutGuard',    feature: 'logoutGuard',    cardId: 'card-logoutGuard' },
+        { id: 'toggle-collections',    feature: 'collections',    cardId: 'card-collections' }
     ];
 
     let featureToggles = {
@@ -401,7 +406,8 @@
         shortcuts: true,
         currencyPicker: true,
         tooltip: true,
-        logoutGuard: true
+        logoutGuard: true,
+        collections: true
     };
 
     async function loadToggles() {
@@ -412,7 +418,8 @@
                 shortcuts: true,
                 currencyPicker: true,
                 tooltip: true,
-                logoutGuard: true
+                logoutGuard: true,
+                collections: true
             }, data.featureToggles);
         }
         TOGGLE_DEFS.forEach(({ id, feature, cardId }) => {
@@ -467,7 +474,7 @@
         } else {
             // Tarayıcı diline göre otomatik seçim
             const browserLang = navigator.language?.toLowerCase().split('-')[0];
-            currentLang = (browserLang === 'az') ? 'az' : 'tr';
+            currentLang = (browserLang === 'tr') ? 'tr' : 'en';
         }
         if (langSelect) langSelect.value = currentLang;
         applyTranslations();
@@ -492,6 +499,41 @@
     // Başlangıç
     // ══════════════════════════════════════════════════════════════════════
 
+    // Tema Tespiti (Global Light Mode)
+    async function detectTheme() {
+        // Fallback for system theme
+        const applyFallback = () => {
+            if (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) {
+                document.documentElement.classList.add('light-theme');
+            } else {
+                document.documentElement.classList.remove('light-theme');
+            }
+        };
+
+        try {
+            const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+            if (tab && (tab.url.includes('youtube.com') || tab.url.includes('studio.youtube.com'))) {
+                const response = await chrome.tabs.sendMessage(tab.id, { type: 'BYS_GET_THEME' });
+                // Note: The content script needs to handle 'BYS_GET_THEME'
+                if (response && typeof response.isDark === 'boolean') {
+                    if (!response.isDark) {
+                        document.documentElement.classList.add('light-theme');
+                    } else {
+                        document.documentElement.classList.remove('light-theme');
+                    }
+                } else {
+                    applyFallback();
+                }
+            } else {
+                applyFallback();
+            }
+        } catch (e) {
+            applyFallback();
+        }
+    }
+
+    // Başlangıç
+    detectTheme();
     await loadLanguage();
     await loadShortcuts();
     await loadToggles();

@@ -1,14 +1,16 @@
-// YouTube Collections - Observer Module v2
+// BYS Collections - Observer Module
+// Namespace: window.BYS.Collections.Observer
 // vidIQ-style: native YT events + debounced MutationObserver fallback
 
-const CollectionsObserver = (() => {
+window.BYS = window.BYS || {};
+window.BYS.Collections = window.BYS.Collections || {};
+
+window.BYS.Collections.Observer = (() => {
   let mutationObserver = null;
   let lastUrl = '';
   let debounceTimer = null;
 
   // ─── navigation abort controller ─────────────────────────────────────
-  // Whenever navigation starts we abort any pending waitForElement promises
-  // so stale injections from the previous page can't complete.
   let currentNavAbortController = new AbortController();
 
   const abortNavigation = () => {
@@ -44,7 +46,7 @@ const CollectionsObserver = (() => {
     const url = window.location.href;
     if (url === lastUrl) return;
     lastUrl = url;
-    abortNavigation();                               // cancel stale waits
+    abortNavigation();
     callbacks.onNavigate.forEach(cb => cb(getPageType(), url));
   };
 
@@ -52,11 +54,10 @@ const CollectionsObserver = (() => {
     callbacks.onPageDataUpdated.forEach(cb => cb(getPageType(), window.location.href));
   };
 
-  // ─── Debounced MutationObserver (URL-diff only) ───────────────────────
+  // ─── Debounced MutationObserver ───────────────────────────────────────
   const startMutationObserver = () => {
     if (mutationObserver) return;
     mutationObserver = new MutationObserver(mutations => {
-      // URL check – debounced so we don't fire 1000x per navigation
       if (window.location.href !== lastUrl) {
         clearTimeout(debounceTimer);
         debounceTimer = setTimeout(fireNavigate, 50);
@@ -69,39 +70,31 @@ const CollectionsObserver = (() => {
     });
   };
 
-  // ─── YouTube native SPA events (primary mechanism) ────────────────────
+  // ─── YouTube native SPA events ────────────────────────────────────────
   const bindYTEvents = () => {
-    // yt-navigate-start  → navigation begins, cancel stale waits immediately
     document.addEventListener('yt-navigate-start', () => {
       abortNavigation();
     });
 
-    // yt-navigate-finish → URL has changed and skeleton DOM is painted
     document.addEventListener('yt-navigate-finish', () => {
       fireNavigate();
     });
 
-    // yt-page-data-updated → real page data (channel name, avatar…) is ready
-    // This is the key event for updating button state - fires AFTER navigate-finish
     document.addEventListener('yt-page-data-updated', () => {
       firePageDataUpdated();
     });
 
-    // History API (back/forward buttons)
     window.addEventListener('popstate', () => {
       setTimeout(fireNavigate, 0);
     });
   };
 
   // ─── waitForElement ───────────────────────────────────────────────────
-  // Returns a Promise that resolves when any of `selectors` matches in DOM,
-  // or rejects if `timeout` expires OR the navigation AbortSignal fires.
   const waitForElement = (selectors, timeout = 5000) => {
     const selectorList = Array.isArray(selectors) ? selectors : [selectors];
     const signal = currentNavAbortController.signal;
 
     return new Promise((resolve, reject) => {
-      // Already present?
       for (const s of selectorList) {
         const el = document.querySelector(s);
         if (el) { resolve(el); return; }
@@ -129,7 +122,6 @@ const CollectionsObserver = (() => {
   // ─── URL handle extraction ──────────────────────────────────────────────
   const getHandleFromUrl = () => {
     const path = window.location.pathname;
-    // /@handle → handle (lowercased for comparison)
     const m = path.match(/^\/@([\w.-]+)/);
     return m ? m[1].toLowerCase() : null;
   };
@@ -154,21 +146,13 @@ const CollectionsObserver = (() => {
   };
 
   // ─── waitForDOMSync ────────────────────────────────────────────────────
-  // Polls every `interval`ms until the DOM-displayed handle matches the
-  // handle in the current URL.  Resolves with `true` when synced or
-  // `false` if timed out / navigation was aborted.
-  //
-  // For /channel/UCxxxx URLs where there's no handle in the URL, resolves
-  // immediately (we rely on yt-page-data-updated in those cases).
   const waitForDOMSync = (timeout = 5000, interval = 80) => {
     const urlHandle = getHandleFromUrl();
     const signal = currentNavAbortController.signal;
 
-    // No handle in URL (e.g. /channel/UCxxx) — can't poll for it
     if (!urlHandle) return Promise.resolve(true);
 
     return new Promise((resolve) => {
-      // Already synced?
       if (getDOMHandle() === urlHandle) { resolve(true); return; }
       if (signal.aborted) { resolve(false); return; }
 
@@ -179,15 +163,12 @@ const CollectionsObserver = (() => {
         if (Date.now() - startTime > timeout) { clearInterval(timer); resolve(false); return; }
       }, interval);
 
-      // Also abort on navigation
       const onAbort = () => { clearInterval(timer); resolve(false); };
       signal.addEventListener('abort', onAbort, { once: true });
     });
   };
+
   // ─── Theme Observer ───────────────────────────────────────────────────
-  // YouTube signals light mode by removing the `dark` attribute on <html>.
-  // We mirror this by toggling `ytc-light-theme` on <html> so our CSS
-  // variables can flip the entire extension palette instantly.
   const applyTheme = () => {
     const isLight = !document.documentElement.hasAttribute('dark');
     document.documentElement.classList.toggle('ytc-light-theme', isLight);
@@ -196,7 +177,7 @@ const CollectionsObserver = (() => {
   let themeObserver = null;
 
   const startThemeObserver = () => {
-    applyTheme(); // Apply correct theme immediately on load
+    applyTheme();
     themeObserver = new MutationObserver(() => applyTheme());
     themeObserver.observe(document.documentElement, {
       attributes: true,
@@ -235,7 +216,3 @@ const CollectionsObserver = (() => {
     getNavSignal: () => currentNavAbortController.signal
   };
 })();
-
-if (typeof module !== 'undefined' && module.exports) {
-  module.exports = CollectionsObserver;
-}
