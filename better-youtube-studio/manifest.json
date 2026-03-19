@@ -4,9 +4,7 @@
     "version": "1.0.0",
     "description": "YouTube Studio'yu daha kullanışlı hale getiren Chrome eklentisi — grafik renkleri, klavye kısayolları, AZN tooltip ve gelişmiş para birimi seçici.",
     "permissions": [
-        "storage",
-        "activeTab",
-        "tabs"
+        "storage"
     ],
     "host_permissions": [
         "https://studio.youtube.com/*",
@@ -34,6 +32,7 @@
             "js": [
                 "src/utils/storage.js",
                 "src/utils/dom.js",
+                "src/utils/i18n.js",
                 "src/features/graphColors/graphColors.js",
                 "src/features/shortcuts/shortcuts.js",
                 "src/features/tooltip/tooltip.js",
@@ -54,7 +53,10 @@
                 "https://www.youtube.com/*"
             ],
             "js": [
-                "src/features/logoutGuard/logoutGuard.js"
+                "src/utils/storage.js",
+                "src/utils/i18n.js",
+                "src/features/logoutGuard/logoutGuard.js",
+                "src/content/youtubeMain.js"
             ],
             "css": [
                 "src/features/logoutGuard/logoutGuard.css"

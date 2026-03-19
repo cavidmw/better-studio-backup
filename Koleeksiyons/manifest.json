@@ -1,0 +1,46 @@
+{
+  "manifest_version": 3,
+  "name": "YouTube Collections",
+  "version": "1.0.0",
+  "description": "YouTube kanallarını koleksiyonlar halinde organize edin",
+  "permissions": [
+    "storage",
+    "tabs"
+  ],
+  "host_permissions": [
+    "https://www.youtube.com/*",
+    "https://youtube.com/*"
+  ],
+  "content_scripts": [
+    {
+      "matches": [
+        "https://www.youtube.com/*",
+        "https://youtube.com/*"
+      ],
+      "js": [
+        "scripts/config.js",
+        "scripts/storage.js",
+        "scripts/youtube-api.js",
+        "scripts/observer.js",
+        "scripts/ui/modals.js",
+        "scripts/ui/global-modal.js",
+        "scripts/ui/masthead-button.js",
+        "scripts/channel-page.js",
+        "scripts/content.js"
+      ],
+      "css": [
+        "styles/collections.css"
+      ],
+      "run_at": "document_idle"
+    }
+  ],
+  "icons": {
+    "16": "icons/icon16.svg",
+    "32": "icons/icon32.svg",
+    "48": "icons/icon48.svg",
+    "128": "icons/icon128.svg"
+  },
+  "background": {
+    "service_worker": "background.js"
+  }
+}

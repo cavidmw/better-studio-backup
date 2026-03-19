@@ -3,12 +3,22 @@
  * YouTube ve YouTube Studio'da "Oturumu kapat" butonuna tıklandığında
  * premium bir onay modalı göstererek yanlışlıkla çıkışı engeller.
  */
-(function () {
+window.BYS = window.BYS || {};
+
+window.BYS.LogoutGuard = (function () {
     'use strict';
 
-    const LOGOUT_TEXTS = ['Oturumu kapat', 'Sign out', 'Çıkış yap'];
+    const LOGOUT_TEXTS = ['Oturumu kapat', 'Sign out', 'Çıkış yap', 'Hesabdan çıx'];
     let modalVisible = false;
     let pendingLogoutElement = null;
+    let initialized = false;
+    let clickHandler = null;
+
+    // ─── i18n Helper ──────────────────────────────────────────────────────────
+
+    function t(key) {
+        return window.BYS?.i18n?.t?.(key) || key;
+    }
 
     // ─── SVG Uyarı İkonu ───────────────────────────────────────────────────────
     const WARNING_ICON_SVG = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>`;
@@ -22,11 +32,11 @@
         overlay.innerHTML = `
             <div id="bys-logout-modal">
                 <div class="bys-logout-icon">${WARNING_ICON_SVG}</div>
-                <h2 class="bys-logout-title">Oturumu Kapat</h2>
-                <p class="bys-logout-desc">Tüm Google hesaplarından çıkış yapılacak ve tekrar giriş gerekebilir.</p>
+                <h2 class="bys-logout-title">${t('logout.title')}</h2>
+                <p class="bys-logout-desc">${t('logout.desc')}</p>
                 <div class="bys-logout-actions">
-                    <button id="bys-logout-cancel" class="bys-logout-btn">İptal</button>
-                    <button id="bys-logout-confirm" class="bys-logout-btn">Devam et</button>
+                    <button id="bys-logout-cancel" class="bys-logout-btn">${t('logout.cancel')}</button>
+                    <button id="bys-logout-confirm" class="bys-logout-btn">${t('logout.confirm')}</button>
                 </div>
             </div>
         `;
@@ -171,18 +181,33 @@
         showModal(logoutElement);
     }
 
-    // ─── Init ─────────────────────────────────────────────────────────────────
-    function init() {
-        // Capture phase'de dinle — en erken müdahale
-        document.addEventListener('click', handleClick, true);
+    // ─── Public API ─────────────────────────────────────────────────────────────
 
-        console.log('[BYS] Logout Guard aktif');
-    }
+    return {
+        init() {
+            if (initialized) return;
+            initialized = true;
 
-    // Sayfa yüklendiğinde başlat
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', init);
-    } else {
-        init();
-    }
+            clickHandler = handleClick;
+            document.addEventListener('click', clickHandler, true);
+
+        },
+
+        cleanup() {
+            if (!initialized) return;
+            initialized = false;
+
+            if (clickHandler) {
+                document.removeEventListener('click', clickHandler, true);
+                clickHandler = null;
+            }
+
+            // Modal'ı kapat ve kaldır
+            hideModal();
+            document.getElementById('bys-logout-overlay')?.remove();
+
+        }
+    };
 })();
+
+// Otomatik başlatma kaldırıldı — main.js üzerinden kontrol edilecek

@@ -317,14 +317,37 @@
 /* ─── Modal Footer ────────────────────────────────────────────────── */
 .bys-modal-footer {
   display: flex;
+  align-items: center;
+  justify-content: space-between;
   gap: 10px;
   padding: 16px 20px;
   border-top: 1px solid #2a2a2a;
   background: #191919;
 }
 
+.bys-modal-footer-right {
+  display: flex;
+  gap: 10px;
+}
+
+.bys-m-btn-reset {
+  padding: 10px 14px;
+  background: transparent;
+  border: 1px solid #3a3a3a;
+  border-radius: 10px;
+  color: #888;
+  font-size: 12px;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+}
+
+.bys-m-btn-reset:hover {
+  background: #2a2a2a;
+  color: #e8e8e8;
+  border-color: #555;
+}
+
 .bys-m-btn-apply {
-  flex: 1;
   padding: 10px 16px;
   background: #ff4444;
   border: none;

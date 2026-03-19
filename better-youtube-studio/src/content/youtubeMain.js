@@ -1,0 +1,66 @@
+/**
+ * BYS YouTube Main — YouTube.com için content script
+ * Sadece LogoutGuard özelliğini yönetir.
+ */
+(function () {
+    'use strict';
+
+    const DEFAULT_TOGGLES = {
+        logoutGuard: true
+    };
+
+    let featureToggles = { ...DEFAULT_TOGGLES };
+
+    async function loadToggles() {
+        return new Promise(res => {
+            try {
+                chrome.storage.sync.get('featureToggles', (data) => {
+                    if (data && data.featureToggles) {
+                        featureToggles = Object.assign({ ...DEFAULT_TOGGLES }, data.featureToggles);
+                    }
+                    res();
+                });
+            } catch (e) { res(); }
+        });
+    }
+
+    async function init() {
+        // i18n sistemini başlat
+        if (window.BYS?.i18n?.init) {
+            await window.BYS.i18n.init();
+        }
+
+        await loadToggles();
+
+        // LogoutGuard — toggle açıksa başlat
+        if (featureToggles.logoutGuard !== false && window.BYS?.LogoutGuard?.init) {
+            window.BYS.LogoutGuard.init();
+        }
+    }
+
+    // Popup'tan mesaj dinle
+    chrome.runtime.onMessage.addListener((message) => {
+        if (!message || !message.type) return;
+
+        if (message.type === 'BYS_SET_FEATURE') {
+            const { feature, enabled } = message;
+            if (feature === 'logoutGuard') {
+                featureToggles.logoutGuard = enabled;
+                const mod = window.BYS?.LogoutGuard;
+                if (mod) {
+                    if (enabled && mod.init) {
+                        try { mod.init(); } catch (e) { }
+                    } else if (!enabled && mod.cleanup) {
+                        try { mod.cleanup(); } catch (e) { }
+                    }
+                }
+            }
+        }
+    });
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', init);
+    } else {
+        init();
+    }
+})();

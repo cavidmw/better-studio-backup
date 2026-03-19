@@ -11,6 +11,12 @@ window.BYS = window.BYS || {};
 window.BYS.CurrencyPicker = (function () {
     'use strict';
 
+    // ─── i18n Helper ──────────────────────────────────────────────────────────
+
+    function t(key) {
+        return window.BYS?.i18n?.t?.(key) || key;
+    }
+
     const SVG_STAR_EMPTY = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M22 9.24l-7.19-.62L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21 12 17.27 18.18 21l-1.63-7.03L22 9.24zM12 15.4l-3.76 2.27 1-4.28-3.32-2.88 4.38-.38L12 6.1l1.71 4.04 4.38.38-3.32 2.88 1 4.28L12 15.4z"/></svg>`;
     const SVG_STAR_FILLED = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>`;
 
@@ -264,7 +270,7 @@ window.BYS.CurrencyPicker = (function () {
             const starBtn = document.createElement('button');
             starBtn.className = 'ks-item-star' + (isFav ? ' ks-starred' : '');
             starBtn.type = 'button';
-            starBtn.setAttribute('aria-label', isFav ? 'Favorilerden çıkar' : 'Favorilere ekle');
+            starBtn.setAttribute('aria-label', isFav ? t('currency.removeFav') : t('currency.addFav'));
             starBtn.innerHTML = isFav ? SVG_STAR_FILLED : SVG_STAR_EMPTY;
             starBtn.addEventListener('click', (e) => {
                 e.stopPropagation();
@@ -334,36 +340,36 @@ window.BYS.CurrencyPicker = (function () {
         const picker = document.createElement('div');
         picker.id = 'ks-picker';
         picker.setAttribute('role', 'listbox');
-        picker.setAttribute('aria-label', 'Para birimi seç');
+        picker.setAttribute('aria-label', t('currency.search'));
 
         const toolbar = document.createElement('div');
         toolbar.id = 'ks-toolbar';
 
         searchEl = document.createElement('input');
         searchEl.id = 'ks-search'; searchEl.type = 'text';
-        searchEl.placeholder = 'Ara… USD, Euro, Türk lirası';
+        searchEl.placeholder = t('currency.search');
         searchEl.setAttribute('aria-label', 'Para birimi ara');
         searchEl.autocomplete = 'off'; searchEl.spellcheck = false;
         searchEl.addEventListener('input', () => { searchQuery = searchEl.value.trim(); renderList(); });
 
         starFilterEl = document.createElement('button');
         starFilterEl.id = 'ks-star-filter'; starFilterEl.type = 'button';
-        starFilterEl.setAttribute('aria-label', 'Sadece favorileri göster');
+        starFilterEl.setAttribute('aria-label', t('currency.showFavOnly'));
         starFilterEl.setAttribute('aria-pressed', 'false');
-        starFilterEl.title = 'Sadece favorileri göster';
+        starFilterEl.title = t('currency.showFavOnly');
         starFilterEl.innerHTML = SVG_STAR_EMPTY;
         starFilterEl.addEventListener('click', () => {
             filterFavOnly = !filterFavOnly;
             starFilterEl.classList.toggle('ks-active', filterFavOnly);
             starFilterEl.setAttribute('aria-pressed', String(filterFavOnly));
-            starFilterEl.title = filterFavOnly ? 'Tüm para birimlerini göster' : 'Sadece favorileri göster';
+            starFilterEl.title = filterFavOnly ? t('currency.showAll') : t('currency.showFavOnly');
             renderList();
         });
 
         toolbar.appendChild(searchEl); toolbar.appendChild(starFilterEl);
         listEl = document.createElement('ul'); listEl.id = 'ks-list';
         emptyEl = document.createElement('div'); emptyEl.id = 'ks-empty';
-        emptyEl.textContent = 'Sonuç bulunamadı.';
+        emptyEl.textContent = t('currency.noResult');
 
         picker.appendChild(toolbar); picker.appendChild(listEl); picker.appendChild(emptyEl);
         container.appendChild(picker);
@@ -432,7 +438,7 @@ window.BYS.CurrencyPicker = (function () {
             intervalIds.push(setInterval(() => {
                 if (!injected) return;
                 if (!deepQuery(document, '#ks-picker')) { resetInjection(); tryInject(); }
-            }, 1000));
+            }, 2000));
 
             setTimeout(tryInject, 400);
             setTimeout(tryInject, 1200);

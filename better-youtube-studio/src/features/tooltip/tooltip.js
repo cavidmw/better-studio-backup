@@ -19,8 +19,8 @@ window.BYS.Tooltip = (function () {
     let lastTick = 0;
     let initialized = false;
 
-    // ── Bound handler refs (for removeEventListener) ──────────────────────────
-    let _onMouseover, _onMousemove, _onMouseout, _onMousemoveChart;
+    // ── Bound handler refs (for removeEventListener) ──────────────────────
+    let _onMouseover, _onMousemove, _onMouseout;
 
     // ── Parse / Format ────────────────────────────────────────────────────────
 
@@ -189,7 +189,14 @@ window.BYS.Tooltip = (function () {
             };
 
             _onMousemove = (e) => {
+                // Tooltip pozisyonu güncelle
                 if (active) positionTooltip(e.clientX, e.clientY);
+                
+                // Hovercard AZN satırı kontrolü (throttled)
+                const now = Date.now();
+                if (now - lastTick < 150) return;
+                lastTick = now;
+                if (document.querySelector('.aplos-hovercard')) updateHovercardAznLine();
             };
 
             _onMouseout = (e) => {
@@ -200,17 +207,9 @@ window.BYS.Tooltip = (function () {
                 hideTooltip();
             };
 
-            _onMousemoveChart = (e) => {
-                const now = Date.now();
-                if (now - lastTick < 120) return;
-                lastTick = now;
-                if (document.querySelector('.aplos-hovercard')) updateHovercardAznLine();
-            };
-
             document.addEventListener('mouseover', _onMouseover);
             document.addEventListener('mousemove', _onMousemove);
             document.addEventListener('mouseout', _onMouseout);
-            document.addEventListener('mousemove', _onMousemoveChart);
         },
 
         cleanup() {
@@ -221,7 +220,6 @@ window.BYS.Tooltip = (function () {
             document.removeEventListener('mouseover', _onMouseover);
             document.removeEventListener('mousemove', _onMousemove);
             document.removeEventListener('mouseout', _onMouseout);
-            document.removeEventListener('mousemove', _onMousemoveChart);
 
             hideTooltip();
             document.querySelectorAll(`.${AZN_LINE_CLASS}`).forEach(el => el.remove());

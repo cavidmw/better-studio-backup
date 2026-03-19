@@ -4,15 +4,20 @@
 window.BYS = window.BYS || {};
 
 window.BYS.Storage = (function () {
+  // YouTube Studio'nun orijinal grafik renkleri
+  const YOUTUBE_DEFAULT_COLORS = {
+    primary: '#3ea6ff',
+    favorites: []
+  };
+
   const DEFAULTS = {
     graphColors: {
       primary: '#ff6b35',
-      secondary: '#4ecdc4',
-      favorites: ['#ff6b35', '#4ecdc4', '#a855f7', '#f59e0b']
+      favorites: []
     },
     shortcuts: {
       '1': 'dashboard',
-      '2': 'content',
+      '2': 'content-videos',
       '3': 'analytics',
       '4': 'comments',
       '5': 'monetization',
@@ -20,11 +25,26 @@ window.BYS.Storage = (function () {
       '7': 'settings',
       '8': 'copyright',
       '9': 'subtitles'
+    },
+    featureToggles: {
+      graphColors: true,
+      shortcuts: true,
+      currencyPicker: true,
+      tooltip: true,
+      logoutGuard: true
     }
   };
 
   return {
     DEFAULTS,
+    YOUTUBE_DEFAULT_COLORS,
+
+    /**
+     * YouTube'un orijinal grafik renklerini döndür
+     */
+    getYouTubeDefaults() {
+      return { ...YOUTUBE_DEFAULT_COLORS };
+    },
 
     /**
      * chrome.storage.sync'ten veri oku

@@ -12,9 +12,14 @@ window.BYS = window.BYS || {};
 window.BYS.GraphColors = (function () {
     let settings = { primary: '#ff6b35', favorites: [] };
     let mutationObserver = null;
-    let btnObserver = null;
     let cssStyleEl = null;
     let modalOpen = false;
+
+    // ─── i18n Helper ──────────────────────────────────────────────────────────
+
+    function t(key) {
+        return window.BYS?.i18n?.t?.(key) || key;
+    }
 
     // ─── Yardımcı ─────────────────────────────────────────────────────────────
 
@@ -71,51 +76,39 @@ window.BYS.GraphColors = (function () {
     `;
     }
 
-    // ─── Header Butonu Injection ──────────────────────────────────────────────
+    // ─── Anchor-Based Buton Enjeksiyonu (NewStudio yaklaşımı) ─────────────────
 
-    async function injectHeaderButton() {
-        if (document.getElementById('bys-header-btn')) return;
+    let btnCheckInterval = null;
+    let headerBtn = null; // Buton referansını tut, tekrar kullan
 
-        let anchor = null;
-        try {
-            anchor = await BYS.DOM.waitForAny([
-                'ytcp-analytics-advanced-settings-button',
-                '[aria-label*="advanced"]',
-                '[aria-label*="Gelişmiş"]',
-                'ytcp-button[label*="advanced"]'
-            ], 3000);
-        } catch { /* Fallback ile devam */ }
+    const DEBUG = true;
+    function log(...args) {
+        if (DEBUG) console.log('[BYS GraphColors]', ...args);
+    }
 
-        if (!anchor) {
-            const allBtns = document.querySelectorAll('button, ytcp-button, span, div');
-            for (const el of allBtns) {
-                if (el.textContent?.trim() === 'Gelişmiş mod') {
-                    anchor = el.closest('ytcp-analytics-advanced-settings-button, ytcp-button, button') || el;
-                    break;
-                }
-            }
+    // Anchor element bul — .advanced-analytics-container içindeki ytcp-ve
+    function getAnchorElement() {
+        const container = document.querySelector('.advanced-analytics-container');
+        if (!container) {
+            log('Anchor bulunamadı: .advanced-analytics-container yok');
+            return null;
         }
+        
+        const ytcpVe = container.querySelector('ytcp-ve');
+        log('Anchor bulundu:', { container: !!container, ytcpVe: !!ytcpVe });
+        return {
+            container,
+            insertBefore: ytcpVe // ytcp-ve varsa önüne ekle
+        };
+    }
 
-        if (!anchor) {
-            try {
-                anchor = await BYS.DOM.waitForAny([
-                    'ytcp-analytics-header-controls',
-                    '.ytcp-analytics-header-controls',
-                    'ytcp-analytics-tabs',
-                    '#analytics-panel'
-                ], 3000);
-            } catch {
-                return;
-            }
-        }
-
-        if (document.getElementById('bys-header-btn')) return;
-
+    // Butonu oluştur (sadece bir kez)
+    function createButton() {
         const btn = document.createElement('button');
         btn.type = 'button';
         btn.id = 'bys-header-btn';
         btn.className = 'bys-header-btn';
-        btn.title = 'Grafik Renklerini Özelleştir';
+        btn.title = t('modal.graphColors.title');
         btn.innerHTML = `
       <span class="bys-btn-icon">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
@@ -123,7 +116,7 @@ window.BYS.GraphColors = (function () {
           <path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.93 4.93l2.12 2.12M16.95 16.95l2.12 2.12M4.93 19.07l2.12-2.12M16.95 7.05l2.12-2.12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
         </svg>
       </span>
-      <span>Özelleştir</span>
+      <span>${t('nav.customization')}</span>
     `;
 
         btn.addEventListener('click', (e) => {
@@ -133,20 +126,63 @@ window.BYS.GraphColors = (function () {
             openModal();
         }, true);
 
-        const insertTarget = anchor?.closest('ytcp-analytics-advanced-settings-button') || anchor;
-        const parent = insertTarget?.parentElement;
-        if (parent) {
-            parent.insertBefore(btn, insertTarget);
-        } else {
-            const headerContainer = document.querySelector(
-                'ytcp-analytics-header-controls, [class*="analytics-header"]'
-            );
-            (headerContainer || document.body).appendChild(btn);
+        return btn;
+    }
+
+    // Butonu kontrol et ve gerekirse ekle/gizle
+    function ensureButton() {
+        const anchor = getAnchorElement();
+        
+        // Anchor yoksa butonu gizle (DOM'dan kaldırma, sadece gizle)
+        if (!anchor) {
+            if (headerBtn) {
+                headerBtn.style.display = 'none';
+            }
+            return;
+        }
+        
+        // Buton yoksa oluştur
+        if (!headerBtn) {
+            headerBtn = createButton();
+        }
+        
+        // Buton DOM'da değilse veya yanlış yerdeyse ekle
+        if (!document.contains(headerBtn) || headerBtn.parentElement !== anchor.container) {
+            if (anchor.insertBefore) {
+                anchor.container.insertBefore(headerBtn, anchor.insertBefore);
+            } else {
+                anchor.container.insertBefore(headerBtn, anchor.container.firstChild);
+            }
+        }
+        
+        // Görünür yap
+        headerBtn.style.display = '';
+    }
+
+    // Periyodik kontrol başlat — 250ms interval (NewStudio'nun 142ms'ine yakın)
+    function startButtonCheck() {
+        stopButtonCheck();
+        log('startButtonCheck() çağrıldı');
+
+        // İlk deneme
+        ensureButton();
+
+        // 250ms interval — hızlı tepki için
+        btnCheckInterval = setInterval(ensureButton, 250);
+    }
+
+    function stopButtonCheck() {
+        if (btnCheckInterval) {
+            clearInterval(btnCheckInterval);
+            btnCheckInterval = null;
         }
     }
 
     function removeHeaderButton() {
-        document.getElementById('bys-header-btn')?.remove();
+        if (headerBtn) {
+            headerBtn.remove();
+            headerBtn = null;
+        }
         closeModal();
     }
 
@@ -166,48 +202,37 @@ window.BYS.GraphColors = (function () {
               <rect width="24" height="24" rx="5" fill="#ff4444"/>
               <path d="M9 7l8 5-8 5V7z" fill="white"/>
             </svg>
-            <span>Grafik Renklerini Özelleştir</span>
+            <span>${t('modal.graphColors.title')}</span>
           </div>
           <button class="bys-modal-close" id="bys-modal-close">✕</button>
         </div>
 
         <div class="bys-modal-body">
           <div class="bys-modal-section">
-            <label class="bys-modal-label">🎨 Ana Renk</label>
+            <label class="bys-modal-label">${t('modal.graphColors.mainColor')}</label>
             <div class="bys-modal-color-row">
               <input type="color" id="bys-m-picker" value="${settings.primary}" class="bys-m-picker">
               <input type="text" id="bys-m-hex" value="${settings.primary}" maxlength="7" class="bys-m-hex" placeholder="#rrggbb">
               <div class="bys-m-preview" id="bys-m-preview" style="background:${settings.primary}"></div>
             </div>
-            <p class="bys-modal-hint">Çizgi grafik, 48 saatlik çubuklar, tooltip ve hover noktası bu renge dönüşür.</p>
-          </div>
-
-          <div class="bys-modal-section bys-modal-presets-section">
-            <label class="bys-modal-label">⚡ Hızlı Renkler</label>
-            <div class="bys-modal-presets">
-              <button class="bys-m-preset" style="background:#ff6b35" data-color="#ff6b35" title="Turuncu"></button>
-              <button class="bys-m-preset" style="background:#3ea6ff" data-color="#3ea6ff" title="Mavi"></button>
-              <button class="bys-m-preset" style="background:#1db954" data-color="#1db954" title="Yeşil"></button>
-              <button class="bys-m-preset" style="background:#a855f7" data-color="#a855f7" title="Mor"></button>
-              <button class="bys-m-preset" style="background:#f59e0b" data-color="#f59e0b" title="Sarı"></button>
-              <button class="bys-m-preset" style="background:#ec4899" data-color="#ec4899" title="Pembe"></button>
-              <button class="bys-m-preset" style="background:#ef4444" data-color="#ef4444" title="Kırmızı"></button>
-              <button class="bys-m-preset" style="background:#ffffff" data-color="#ffffff" title="Beyaz"></button>
-            </div>
+            <p class="bys-modal-hint">${t('modal.graphColors.hint')}</p>
           </div>
 
           <div class="bys-modal-section bys-modal-fav-section">
             <div class="bys-modal-fav-header">
-              <label class="bys-modal-label">⭐ Favoriler</label>
-              <button id="bys-m-add-fav" class="bys-m-add-fav">+ Ekle</button>
+              <label class="bys-modal-label">${t('modal.graphColors.favorites')}</label>
+              <button id="bys-m-add-fav" class="bys-m-add-fav">${t('modal.graphColors.addFav')}</button>
             </div>
             <div id="bys-m-fav-list" class="bys-m-fav-list"></div>
           </div>
         </div>
 
         <div class="bys-modal-footer">
-          <button id="bys-m-apply" class="bys-m-btn-apply">✓ Uygula ve Kaydet</button>
-          <button id="bys-m-cancel" class="bys-m-btn-cancel">İptal</button>
+          <button id="bys-m-reset" class="bys-m-btn-reset">${t('modal.graphColors.reset')}</button>
+          <div class="bys-modal-footer-right">
+            <button id="bys-m-cancel" class="bys-m-btn-cancel">${t('modal.graphColors.cancel')}</button>
+            <button id="bys-m-apply" class="bys-m-btn-apply">${t('modal.graphColors.apply')}</button>
+          </div>
         </div>
       </div>
     `;
@@ -244,7 +269,7 @@ window.BYS.GraphColors = (function () {
             settings.primary = picker.value;
             await BYS.Storage.setKey('graphColors', settings);
             applyCSS();
-            showToast('✅ Renk uygulandı!');
+            showToast(t('modal.graphColors.applied'));
             closeModal();
         });
 
@@ -254,8 +279,27 @@ window.BYS.GraphColors = (function () {
                 settings.favorites = [color, ...settings.favorites.slice(0, 7)];
                 await BYS.Storage.setKey('graphColors', settings);
                 renderFavorites();
-                showToast('⭐ Eklendi!');
+                showToast(t('modal.graphColors.favAdded'));
             }
+        });
+
+        // Varsayılana Dön — YouTube'un orijinal renklerine döndür
+        document.getElementById('bys-m-reset').addEventListener('click', async () => {
+            const ytDefaults = BYS.Storage.getYouTubeDefaults();
+            settings.primary = ytDefaults.primary;
+            // Favorileri koruyoruz, sadece ana rengi sıfırlıyoruz
+            await BYS.Storage.setKey('graphColors', settings);
+            
+            // Picker'ı güncelle
+            syncColor(ytDefaults.primary);
+            
+            // CSS'i kaldır — YouTube'un orijinal stilleri geri gelsin
+            if (cssStyleEl) {
+                cssStyleEl.textContent = '';
+            }
+            
+            showToast(t('modal.graphColors.resetDone'));
+            closeModal();
         });
 
         renderFavorites();
@@ -267,7 +311,7 @@ window.BYS.GraphColors = (function () {
         list.innerHTML = '';
 
         if (!settings.favorites?.length) {
-            list.innerHTML = '<span class="bys-m-fav-empty">Henüz favori renk yok</span>';
+            list.innerHTML = `<span class="bys-m-fav-empty">${t('modal.graphColors.noFav')}</span>`;
             return;
         }
 
@@ -277,7 +321,7 @@ window.BYS.GraphColors = (function () {
             item.innerHTML = `
         <div class="bys-m-fav-dot" style="background:${color}" title="${color}"></div>
         <span class="bys-m-fav-code">${color}</span>
-        <button class="bys-m-fav-use" data-color="${color}">Kullan</button>
+        <button class="bys-m-fav-use" data-color="${color}">${t('modal.graphColors.use')}</button>
         <button class="bys-m-fav-del" data-idx="${idx}">✕</button>
       `;
             item.querySelector('.bys-m-fav-use').addEventListener('click', () => {
@@ -345,37 +389,21 @@ window.BYS.GraphColors = (function () {
 
     return {
         async init() {
+            log('init() çağrıldı, pathname:', location.pathname);
             settings = await BYS.Storage.getKey('graphColors');
             if (!settings.favorites) settings.favorites = [];
 
             applyCSS();
-
-            setTimeout(() => injectHeaderButton(), 1000);
-            setTimeout(() => injectHeaderButton(), 3000);
-
             startObserver();
 
-            if (!btnObserver) {
-                let reinjectTimer = null;
-                btnObserver = new MutationObserver(() => {
-                    if (document.getElementById('bys-header-btn')) return;
-                    if (!location.pathname.toLowerCase().includes('/analytics')) return;
-                    clearTimeout(reinjectTimer);
-                    reinjectTimer = setTimeout(() => injectHeaderButton(), 350);
-                });
-                // Header alanını hedefle, bulunamazsa body fallback
-                const headerTarget = document.querySelector(
-                    'ytcp-analytics-header-controls, ytcp-studio-main-panel, #content'
-                ) || document.body;
-                btnObserver.observe(headerTarget, { childList: true, subtree: true });
-            }
+            // Basit periyodik buton kontrolü başlat
+            startButtonCheck();
         },
 
         cleanup() {
             mutationObserver?.disconnect();
             mutationObserver = null;
-            btnObserver?.disconnect();
-            btnObserver = null;
+            stopButtonCheck();
             removeHeaderButton();
         },
 

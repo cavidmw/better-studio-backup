@@ -116,6 +116,38 @@ body {
     line-height: 1.4;
 }
 
+.hero-right {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+}
+
+.lang-select {
+    background: var(--surface2);
+    border: 1px solid var(--border2);
+    border-radius: 6px;
+    color: var(--text);
+    font-family: var(--font);
+    font-size: 11px;
+    font-weight: 600;
+    padding: 4px 8px;
+    cursor: pointer;
+    outline: none;
+    transition: border-color 0.14s ease, background 0.14s ease;
+    -webkit-appearance: none;
+    appearance: none;
+}
+
+.lang-select:hover {
+    background: var(--surface3);
+    border-color: var(--border2);
+}
+
+.lang-select:focus {
+    border-color: var(--accent);
+}
+
 .hero-badge {
     flex-shrink: 0;
     width: 8px;
@@ -192,6 +224,52 @@ body {
 .card--expandable:active {
     transform: translateY(0);
     box-shadow: none;
+}
+
+/* ── Toggle + Action kartları ── */
+.card--toggleable-action,
+.card--expandable-toggleable {
+    cursor: default;
+}
+
+.card-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+}
+
+.card-action-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border: 1px solid var(--border2);
+    border-radius: 6px;
+    background: var(--surface2);
+    color: var(--muted);
+    cursor: pointer;
+    transition: background 0.14s ease, border-color 0.14s ease, color 0.14s ease, transform 0.14s ease;
+}
+
+.card-action-btn:hover {
+    background: var(--surface3);
+    border-color: var(--border2);
+    color: var(--text);
+}
+
+.card-action-btn:active {
+    transform: scale(0.95);
+}
+
+.card-action-btn.card-chevron {
+    transition: background 0.14s ease, border-color 0.14s ease, color 0.14s ease, transform 0.22s ease;
+}
+
+.card--expandable-toggleable.is-open .card-action-btn.card-chevron {
+    transform: rotate(180deg);
+    color: var(--text);
 }
 
 /* Grafik renkleri kartı — hover'da kırmızı glow */
@@ -556,7 +634,9 @@ body {
 }
 
 /* Kapalı kart hafif soluk */
-.card--toggleable.is-disabled {
+.card--toggleable.is-disabled,
+.card--toggleable-action.is-disabled,
+.card--expandable-toggleable.is-disabled {
     opacity: 0.55;
 }
 

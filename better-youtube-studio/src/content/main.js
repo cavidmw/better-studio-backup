@@ -6,16 +6,24 @@
 (function () {
     'use strict';
 
-    // ─── Yol Eşleştirme ─────────────────────────────────────────────────────────
+    // ─── Feature Toggle Varsayılanları ──────────────────────────────────────────
 
-    let featureToggles = { currencyPicker: true, tooltip: true };
+    const DEFAULT_TOGGLES = {
+        graphColors: true,
+        shortcuts: true,
+        currencyPicker: true,
+        tooltip: true,
+        logoutGuard: true
+    };
+
+    let featureToggles = { ...DEFAULT_TOGGLES };
 
     async function loadToggles() {
         return new Promise(res => {
             try {
                 chrome.storage.sync.get('featureToggles', (data) => {
                     if (data && data.featureToggles) {
-                        featureToggles = Object.assign({ currencyPicker: true, tooltip: true }, data.featureToggles);
+                        featureToggles = Object.assign({ ...DEFAULT_TOGGLES }, data.featureToggles);
                     }
                     res();
                 });
@@ -27,22 +35,29 @@
         const p = pathname.toLowerCase();
         const features = [];
 
-        // Kısayollar her sayfada aktif
-        features.push('shortcuts');
+        // Kısayollar — toggle açıksa
+        if (featureToggles.shortcuts !== false) {
+            features.push('shortcuts');
+        }
 
-        // Para birimi seçici her sayfada aktif — toggle kapalıysa başlatılmaz
+        // Para birimi seçici — toggle açıksa
         if (featureToggles.currencyPicker !== false) {
             features.push('currencyPicker');
         }
 
-        // USD→AZN tooltip — toggle kapalıysa başlatılmaz
+        // USD→AZN tooltip — toggle açıksa
         if (featureToggles.tooltip !== false) {
             features.push('tooltip');
         }
 
-        // Grafik renkleri sadece analytics sayfasında
-        if (p.includes('/analytics')) {
+        // Grafik renkleri — sadece analytics sayfasında ve toggle açıksa
+        if (p.includes('/analytics') && featureToggles.graphColors !== false) {
             features.push('graphColors');
+        }
+
+        // LogoutGuard — her sayfada ve toggle açıksa
+        if (featureToggles.logoutGuard !== false) {
+            features.push('logoutGuard');
         }
 
         return features;
@@ -57,9 +72,14 @@
             shortcuts: window.BYS?.Shortcuts,
             graphColors: window.BYS?.GraphColors,
             currencyPicker: window.BYS?.CurrencyPicker,
-            tooltip: window.BYS?.Tooltip
+            tooltip: window.BYS?.Tooltip,
+            logoutGuard: window.BYS?.LogoutGuard
         }[name];
     }
+
+    // Her navigasyonda yeniden init edilmesi gereken feature'lar
+    // (SPA'da DOM tamamen değiştiği için buton/UI kaybolabiliyor)
+    const REINIT_ON_NAVIGATE = ['graphColors'];
 
     async function activateFeatures(pathname) {
         const needed = getActiveFeatures(pathname);
@@ -76,8 +96,12 @@
 
         // Yeni gerekli feature'ları başlat
         for (const name of needed) {
-            if (!activeFeatures.includes(name)) {
-                const mod = getFeatureModule(name);
+            const mod = getFeatureModule(name);
+            const wasActive = activeFeatures.includes(name);
+            const needsReinit = REINIT_ON_NAVIGATE.includes(name);
+
+            // İlk kez aktif olan VEYA her navigasyonda yeniden init edilmesi gereken
+            if (!wasActive || needsReinit) {
                 if (mod?.init) {
                     try { await mod.init(); } catch (e) { console.warn(`[BYS] ${name} init hatası:`, e); }
                 }
@@ -164,6 +188,10 @@
     // ─── Başlangıç ───────────────────────────────────────────────────────────────
 
     async function init() {
+        // i18n sistemini başlat
+        if (window.BYS?.i18n?.init) {
+            await window.BYS.i18n.init();
+        }
         await loadToggles();
         hookHistory();
         lastPathname = location.pathname;
